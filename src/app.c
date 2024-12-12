@@ -1,38 +1,56 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#include <stdbool.h>
 
-int main(int argc, char *argv[])
+const unsigned int SCR_WIDTH = 1280;
+const unsigned int SCR_HEIGHT = 720;
+bool quit = false;
+
+int main(int argc, char const *argv[])
 {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    // First, initiate SDL. Here initiating sdl-subsystem
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
-        printf("SDL konnte nicht initialisiert werden: %s\n", SDL_GetError());
+        printf("Could not initiate SDL: %s\n", SDL_GetError);
         return 1;
     }
 
+    // Create Window instance
     SDL_Window *window = SDL_CreateWindow("LunaCore",
                                           SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                          800, 600, SDL_WINDOW_SHOWN);
+                                          SCR_WIDTH,
+                                          SCR_HEIGHT,
+                                          SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
-    if (!window)
+    if (window == NULL)
     {
-        printf("Fenster konnte nicht erstellt werden: %s\n", SDL_GetError());
+        printf("Could not initiate SDL-Window: %s\n", SDL_GetError());
         SDL_Quit();
         return 1;
     }
 
-    SDL_Event e;
-    int quit = 0;
+    SDL_Event event;
+
+    // activates V-sync. Similar to the GLFW function "glfwSwapInterval(int a)"
+    SDL_GL_SetSwapInterval(1);
+
+    // main loop. Different than in OpenGL itself, the window does not needs to be updated every frame
+    // The Main window is created until SDL_QUIT is set to true...
     while (!quit)
     {
-        while (SDL_PollEvent(&e) != 0)
+        while (SDL_PollEvent(&event))
         {
-            if (e.type == SDL_QUIT)
+            // exit the main loop and closes the window
+            if (event.type == SDL_QUIT)
             {
-                quit = 1;
+                quit = true;
+            }
+            // checks for the event type and what event option is called by the specific type.
+            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED)
+            {
+                printf("Resized Window: %d x %d\n", event.window.data1, event.window.data2);
             }
         }
-
-        SDL_Delay(16); // Begrenze die CPU-Auslastung etwas
     }
 
     SDL_DestroyWindow(window);
