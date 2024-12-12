@@ -1,7 +1,5 @@
 #include <stdio.h>
-#include <SDL.h>
-
-// Test for commit :D
+#include <SDL2/SDL.h>
 
 int main(int argc, char *argv[])
 {
