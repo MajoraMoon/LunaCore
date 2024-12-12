@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <SDL.h>
 
+// Test for commit :D
+
 int main(int argc, char *argv[])
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
