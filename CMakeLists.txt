@@ -13,15 +13,40 @@ file(GLOB SOURCES "src/*.c")
 # Set runtime output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
-# Set SDL2 paths
-set(CMAKE_PREFIX_PATH "C:/SDL2/cmake")
-find_package(SDL2 REQUIRED CONFIG)
 
 # Add executable
 add_executable(app ${SOURCES})
 
-# Include SDL2 headers
-target_include_directories(app PRIVATE C:/SDL2/x86_64-w64-mingw32/include)
+# Windows-specific setup
+if(WIN32)
+
+    # Set SDL2 paths
+    set(CMAKE_PREFIX_PATH "C:/SDL2/cmake")
+    find_package(SDL2 REQUIRED CONFIG)
+
+
+    # Include SDL2 headers
+    target_include_directories(app PRIVATE C:/SDL2/x86_64-w64-mingw32/include)
+
+
+    # Copy SDL2.dll to the bin directory after the build
+    add_custom_command(TARGET app POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    C:/SDL2/x86_64-w64-mingw32/bin/SDL2.dll
+    $<TARGET_FILE_DIR:app>)
+
+# Linux-specific SDL2 setup
+elseif(UNIX)
+
+    find_package(SDL2 REQUIRED)
+
+    include_directories(${SDL2_INCLUDE_DIRS})
+
+    target_link_libraries(app PRIVATE ${SDL2_LIBRARIES})
+
+
+endif()
+
 
 # Link SDL2 (seems not really necessary but for let it's just a chill if clause)
 if(TARGET SDL2::SDL2main)
@@ -30,8 +55,5 @@ endif()
 target_link_libraries(app PRIVATE SDL2::SDL2)
 
 
-# Copy SDL2.dll to the bin directory after the build
-add_custom_command(TARGET app POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    C:/SDL2/x86_64-w64-mingw32/bin/SDL2.dll
-    $<TARGET_FILE_DIR:app>)
+
+
