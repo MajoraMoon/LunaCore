@@ -25,7 +25,7 @@ if(WIN32)
     # Set SDL2 paths
     set(CMAKE_PREFIX_PATH "C:/SDL2/cmake")
     find_package(SDL2 REQUIRED CONFIG)
-
+    find_package(SDL2_ttf REQUIRED CONFIG)
 
     # Include SDL2 headers
     target_include_directories(app PRIVATE C:/SDL2/x86_64-w64-mingw32/include)
@@ -43,10 +43,11 @@ if(WIN32)
 elseif(UNIX)
 
     find_package(SDL2 REQUIRED)
+    find_package(SDL2_ttf REQUIRED)
 
-    include_directories(${SDL2_INCLUDE_DIRS})
+    include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS})
 
-    target_link_libraries(app PRIVATE ${SDL2_LIBRARIES})
+    target_link_libraries(app PRIVATE ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 
     target_include_directories(app PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
@@ -54,11 +55,11 @@ elseif(UNIX)
 endif()
 
 
-# Link SDL2 (seems not really necessary but for let it's just a chill if clause)
+# Link SDL2
 if(TARGET SDL2::SDL2main)
     target_link_libraries(app PRIVATE SDL2::SDL2main)
 endif()
-target_link_libraries(app PRIVATE SDL2::SDL2)
+target_link_libraries(app PRIVATE SDL2::SDL2 SDL2_ttf::SDL2_ttf)
 
 
 
