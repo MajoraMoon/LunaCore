@@ -10,6 +10,8 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 # Include all C-Files in the src-directory
 file(GLOB SOURCES "src/*.c")
 
+
+
 # Set runtime output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
@@ -28,6 +30,8 @@ if(WIN32)
     # Include SDL2 headers
     target_include_directories(app PRIVATE C:/SDL2/x86_64-w64-mingw32/include)
 
+    target_include_directories(app PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
 
     # Copy SDL2.dll to the bin directory after the build
     add_custom_command(TARGET app POST_BUILD
@@ -43,6 +47,8 @@ elseif(UNIX)
     include_directories(${SDL2_INCLUDE_DIRS})
 
     target_link_libraries(app PRIVATE ${SDL2_LIBRARIES})
+
+    target_include_directories(app PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 
 endif()

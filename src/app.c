@@ -2,10 +2,12 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 #include <windows.h>
+#include "fps.h"
 
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
 bool quit = false;
+float fps = 0;
 
 int main(int argc, char *argv[])
 {
@@ -61,6 +63,9 @@ int main(int argc, char *argv[])
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+
+        fps = calculateFPS_Float();
+        SDL_Log("FPS: %.2f\n", fps);
 
         SDL_RenderPresent(renderer);
     }
