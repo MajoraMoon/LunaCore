@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <stdbool.h>
-#include <windows.h>
+
 #include "fps.h"
 
 const unsigned int SCR_WIDTH = 1280;
@@ -58,6 +58,15 @@ int main(int argc, char *argv[])
             if (event.type == SDL_QUIT)
             {
                 quit = true;
+            }
+
+            // Detects if the key below is pressed down
+            if (event.type == SDL_KEYDOWN)
+            {
+                if (event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    quit = true;
+                }
             }
         }
 
