@@ -1,17 +1,18 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <stdbool.h>
+#include <windows.h>
 
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
 bool quit = false;
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
     // First, initiate SDL. Here initiating sdl-subsystem
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
-        printf("Could not initiate SDL: %s\n", SDL_GetError);
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initiate SDL: %s\n", SDL_GetError);
         return 1;
     }
 
@@ -24,7 +25,18 @@ int main(int argc, char const *argv[])
 
     if (window == NULL)
     {
-        printf("Could not initiate SDL-Window: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initiate SDL-Window: %s\n", SDL_GetError());
+        SDL_Quit();
+        return 1;
+    }
+
+    // Renderer uses  hardware acceleration and vsync
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+    if (renderer == NULL)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Could not create SDL-Renderer: %s\n", SDL_GetError());
+        SDL_DestroyWindow(window);
         SDL_Quit();
         return 1;
     }
@@ -32,7 +44,7 @@ int main(int argc, char const *argv[])
     SDL_Event event;
 
     // activates V-sync. Similar to the GLFW function "glfwSwapInterval(int a)"
-    SDL_GL_SetSwapInterval(1);
+    // SDL_GL_SetSwapInterval(1);
 
     // main loop. Different than in OpenGL itself, the window does not needs to be updated every frame
     // The Main window is created until SDL_QUIT is set to true...
@@ -45,16 +57,18 @@ int main(int argc, char const *argv[])
             {
                 quit = true;
             }
-            // checks for the event type and what event option is called by the specific type.
-            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED)
-            {
-                printf("Resized Window: %d x %d\n", event.window.data1, event.window.data2);
-            }
         }
+
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+
+        SDL_RenderPresent(renderer);
     }
 
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+    SDL_Log("Quitted successfully");
 
     return 0;
 }
