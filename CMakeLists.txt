@@ -11,7 +11,6 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 file(GLOB SOURCES "src/*.c")
 
 
-
 # Set runtime output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
@@ -19,18 +18,29 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 # Add executable
 add_executable(app ${SOURCES})
 
+# Add FreeType library
+add_subdirectory(lib/freetype)
+target_link_libraries(app PRIVATE freetype)
+
+
 # Windows-specific setup
 if(WIN32)
 
     # Set SDL2 paths
     set(CMAKE_PREFIX_PATH "C:/SDL2/cmake")
     find_package(SDL2 REQUIRED CONFIG)
-    find_package(SDL2_ttf REQUIRED CONFIG)
 
-    # Include SDL2 headers
+
+    # Include headers
     target_include_directories(app PRIVATE C:/SDL2/x86_64-w64-mingw32/include)
-
     target_include_directories(app PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+
+    # Link SDL2
+    if(TARGET SDL2::SDL2main)
+    target_link_libraries(app PRIVATE SDL2::SDL2main)
+    endif()
+    target_link_libraries(app PRIVATE SDL2::SDL2)
 
 
     # Copy SDL2.dll to the bin directory after the build
@@ -39,15 +49,15 @@ if(WIN32)
     C:/SDL2/x86_64-w64-mingw32/bin/SDL2.dll
     $<TARGET_FILE_DIR:app>)
 
+
 # Linux-specific SDL2 setup
 elseif(UNIX)
 
     find_package(SDL2 REQUIRED)
-    find_package(SDL2_ttf REQUIRED)
 
-    include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS})
+    include_directories(${SDL2_INCLUDE_DIRS})
 
-    target_link_libraries(app PRIVATE ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES})
+    target_link_libraries(app PRIVATE ${SDL2_LIBRARIES})
 
     target_include_directories(app PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
@@ -55,11 +65,7 @@ elseif(UNIX)
 endif()
 
 
-# Link SDL2
-if(TARGET SDL2::SDL2main)
-    target_link_libraries(app PRIVATE SDL2::SDL2main)
-endif()
-target_link_libraries(app PRIVATE SDL2::SDL2 SDL2_ttf::SDL2_ttf)
+
 
 
 
