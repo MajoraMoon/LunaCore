@@ -10,17 +10,25 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 # Include all C-Files in the src-directory
 file(GLOB SOURCES "src/*.c")
 
+# Add GLAD source file
+set(GLAD_SRC ${CMAKE_SOURCE_DIR}/lib/glad/src/glad.c)
+
+
 
 # Set runtime output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 
 # Add executable
-add_executable(app ${SOURCES})
+add_executable(app ${SOURCES} ${GLAD_SRC})
 
 # Add FreeType library
 add_subdirectory(lib/freetype)
 target_link_libraries(app PRIVATE freetype)
+
+
+# Add GLAD include directories
+target_include_directories(app PRIVATE ${CMAKE_SOURCE_DIR}/lib/glad/include)
 
 
 # Windows-specific setup
