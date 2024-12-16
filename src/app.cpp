@@ -1,10 +1,10 @@
 #include <stdio.h>
+#include <iostream>
+#include <glad/glad.h>
 #include <SDL2/SDL.h>
 #include <stdbool.h>
-#include <freetype/freetype.h>
-#include <glad/glad.h>
 
-#include "fps.h"
+#include <fps.h>
 
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
@@ -100,3 +100,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+

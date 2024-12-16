@@ -1,80 +1,76 @@
-# The comments are coming from me, because I'm learning Cmake and all that stuff. I know some of these comments may seem dumb.
-
+# cmake_minimum_required gibt die Mindestversion von CMake an, die für dieses Projekt erforderlich ist.
 cmake_minimum_required(VERSION 3.15)
-project(LunaCore C)
 
-# Set C standards
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED True)
+set(CMAKE_CXX_COMPILER g++)
 
-# Include all C-Files in the src-directory
-file(GLOB SOURCES "src/*.c")
 
-# Add GLAD source file
+project(LunaCore CXX C)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Alle C++-Dateien im `src/`-Verzeichnis hinzufügen
+file(GLOB SOURCES "src/*.cpp")
+
+# GLAD-Quellcode-Datei festlegen
 set(GLAD_SRC ${CMAKE_SOURCE_DIR}/lib/glad/src/glad.c)
 
-
-
-# Set runtime output directory
+# Setze das Zielverzeichnis für die Ausführungsdatei
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 
-# Add executable
+set_source_files_properties(${GLAD_SRC} PROPERTIES LANGUAGE C)
+
+
+# Erstelle das ausführbare Programm
 add_executable(app ${SOURCES} ${GLAD_SRC})
 
-# Add FreeType library
-add_subdirectory(lib/freetype)
-target_link_libraries(app PRIVATE freetype)
+# Inkludiere das FreeType-Bibliotheksverzeichnis
+#add_subdirectory(lib/freetype)
 
+# Füge FreeType als Abhängigkeit hinzu
+#target_link_libraries(app PRIVATE freetype)
 
-# Add GLAD include directories
+# Inkludiere GLAD-Hauptverzeichnis
 target_include_directories(app PRIVATE ${CMAKE_SOURCE_DIR}/lib/glad/include)
 
-
-# Windows-specific setup
+# Windows-spezifische Konfiguration
 if(WIN32)
 
-    # Set SDL2 paths
+    # Setze Pfad zu SDL2
     set(CMAKE_PREFIX_PATH "C:/SDL2/cmake")
+
+    # Finde und lade SDL2
     find_package(SDL2 REQUIRED CONFIG)
 
-
-    # Include headers
+    # Füge SDL2-Headerverzeichnisse hinzu
     target_include_directories(app PRIVATE C:/SDL2/x86_64-w64-mingw32/include)
     target_include_directories(app PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-
-    # Link SDL2
+    # Linke SDL2
     if(TARGET SDL2::SDL2main)
-    target_link_libraries(app PRIVATE SDL2::SDL2main)
+        target_link_libraries(app PRIVATE SDL2::SDL2main)
     endif()
     target_link_libraries(app PRIVATE SDL2::SDL2)
 
-
-    # Copy SDL2.dll to the bin directory after the build
+    # Kopiere SDL2.dll in das Bin-Verzeichnis nach dem Build
     add_custom_command(TARGET app POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    C:/SDL2/x86_64-w64-mingw32/bin/SDL2.dll
-    $<TARGET_FILE_DIR:app>)
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        C:/SDL2/x86_64-w64-mingw32/bin/SDL2.dll
+        $<TARGET_FILE_DIR:app>)
 
-
-# Linux-specific SDL2 setup
+# Linux-spezifische SDL2-Konfiguration
 elseif(UNIX)
 
+    # Finde und lade SDL2 für Unix-basierte Systeme
     find_package(SDL2 REQUIRED)
 
+    # Inkludiere SDL2-Headerverzeichnisse
     include_directories(${SDL2_INCLUDE_DIRS})
 
-    target_link_libraries(app PRIVATE ${SDL2_LIBRARIES})
+    # Linke SDL2
+    target_link_libraries(app PRIVATE glad ${SDL2_LIBRARIES})
 
+    # Inkludiere das Hauptverzeichnis des Projekts
     target_include_directories(app PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-
 endif()
-
-
-
-
-
-
-
