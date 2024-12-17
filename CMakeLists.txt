@@ -68,7 +68,7 @@ elseif(UNIX)
     include_directories(${SDL2_INCLUDE_DIRS})
 
     # Linke SDL2
-    target_link_libraries(app PRIVATE glad ${SDL2_LIBRARIES})
+    target_link_libraries(app PRIVATE ${SDL2_LIBRARIES})
 
     # Inkludiere das Hauptverzeichnis des Projekts
     target_include_directories(app PRIVATE ${CMAKE_SOURCE_DIR}/include)

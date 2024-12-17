@@ -25,4 +25,4 @@ public:
     void activateVsync(int vsync);
 };
 
-#endif SDLOPENGLWINDOW_H
+#endif

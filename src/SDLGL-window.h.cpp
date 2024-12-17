@@ -63,13 +63,20 @@ bool SDLGLwindow::init()
 // "1" will activate Vsync. Any other value will deactivate Vsync.
 void SDLGLwindow::activateVsync(int vsync)
 {
-    if (vsync == 1)
+
+    switch (vsync)
     {
+    case 1:
         SDL_GL_SetSwapInterval(1);
-    }
-    else
-    {
+        break;
+
+    case -1:
+        SDL_GL_SetSwapInterval(-1);
+        break;
+
+    default:
         SDL_GL_SetSwapInterval(0);
+        break;
     }
 }
 
