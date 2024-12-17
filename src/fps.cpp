@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include <stdint.h>
 #include <math.h>
+
 #include "fps.h"
 
 // Internal calculation of Frames per Second

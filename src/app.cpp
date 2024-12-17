@@ -13,6 +13,7 @@ float fps = 0;
 
 int main(int argc, char *argv[])
 {
+    
     // First, initiate SDL. Here initiating sdl-subsystem
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
@@ -49,7 +50,7 @@ int main(int argc, char *argv[])
 
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
     {
-        fprintf(stderr, "Failed to initialize GLAD\n");
+        std::cerr << "Failed to initialize GLAD\n";
         SDL_GL_DeleteContext(gl_context);
         SDL_DestroyWindow(window);
         SDL_Quit();
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
 
     SDL_Event event;
 
-    // activates V-sync. Similar to the GLFW function "glfwSwapInterval(int a)"
+    // activates V-sync. Similar to the GLFW function "glfwSwapInterval(int a)". So it is the same lol
     SDL_GL_SetSwapInterval(1);
 
     // main loop. Different than in OpenGL itself, the window does not needs to be updated every frame
