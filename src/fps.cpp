@@ -14,23 +14,20 @@ static int calculateFPS_Internal()
     uint32_t currentTime = SDL_GetTicks();
     frames++;
 
-    // Überprüft, ob mindestens 1 Sekunde vergangen ist, um FPS zu berechnen
     if (currentTime >= lastTime + 1000)
     {
-        fps = frames;           // FPS berechnen (Frames pro Sekunde)
-        frames = 0;             // Zähler zurücksetzen
-        lastTime = currentTime; // Letzte Aktualisierung der Zeit
+        fps = frames;
+        frames = 0;
+        lastTime = currentTime;
     }
 
     return fps;
 }
 
-// Wrapper für FPS
 void OutPut_fps()
 {
-    int fps = calculateFPS_Internal(); // Aktuellen FPS berechnen
+    int fps = calculateFPS_Internal();
 
-    // Überprüft, ob FPS einen gültigen Wert erreicht hat und gibt ihn aus
     if (fps >= 0)
     {
         SDL_Log("FPS: %d\n", fps);

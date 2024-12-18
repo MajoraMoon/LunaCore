@@ -74,8 +74,11 @@ void SDLGLwindow::activateVsync(int vsync)
         SDL_GL_SetSwapInterval(-1);
         break;
 
-    default:
+    case 0:
         SDL_GL_SetSwapInterval(0);
+        break;
+    default:
+        throw std::invalid_argument("Invalid value to activate Vsync.\nPut either '1' to activate Vsync,\n'0' to deactivate Vsync,\n-1 to activate adaptive Vsync (if available)");
         break;
     }
 }
