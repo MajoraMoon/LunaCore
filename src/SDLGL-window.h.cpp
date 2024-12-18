@@ -1,7 +1,7 @@
 #include "SDLGL-window.h"
 
-SDLGLwindow::SDLGLwindow(const std::string &title, GLuint width, GLuint height, int vsync)
-    : title(title), width(width), vsync(vsync), window(nullptr) {}
+SDLGLwindow::SDLGLwindow(const std::string &title, GLuint width, GLuint height)
+    : title(title), width(width), height(height), window(nullptr) {}
 
 SDLGLwindow::~SDLGLwindow()
 {
@@ -81,4 +81,14 @@ SDL_Window *SDLGLwindow::getWindow() const
 SDL_GLContext SDLGLwindow::getGLContext() const
 {
     return glContext;
+}
+
+GLuint SDLGLwindow::getInitWidth() const
+{
+    return width;
+}
+
+GLuint SDLGLwindow::getInitHeight() const
+{
+    return height;
 }

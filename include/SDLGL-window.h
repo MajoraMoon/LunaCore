@@ -13,16 +13,17 @@ private:
     GLuint width, height;
     SDL_Window *window;
     SDL_GLContext glContext;
-    int vsync;
 
 public:
-    SDLGLwindow(const std::string &title, GLuint width, GLuint height, int vsync);
+    SDLGLwindow(const std::string &title, GLuint width, GLuint height);
     ~SDLGLwindow();
 
     bool init();
     SDL_Window *getWindow() const;
     SDL_GLContext getGLContext() const;
     void activateVsync(int vsync);
+    GLuint getInitWidth() const;
+    GLuint getInitHeight() const;
 };
 
-#endif SDLOPENGLWINDOW_H
+#endif
