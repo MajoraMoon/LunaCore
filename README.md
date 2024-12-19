@@ -1,4 +1,4 @@
-# Just Messing Around with Graphics in C
+# Just Messing Around with Graphics in C ++
 
 ### _SDL2 Problem Solved:_
 
