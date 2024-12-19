@@ -1,4 +1,4 @@
-#include "SDLGL-window.h"
+#include "SDLGLwindow.h"
 
 SDLGLwindow::SDLGLwindow(const std::string &title, GLuint width, GLuint height)
     : title(title), width(width), height(height), window(nullptr) {}

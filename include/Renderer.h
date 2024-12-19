@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
-#include <SDLGL-window.h>
+#include "SDLGLwindow.h"
 #include <stdexcept>
 #include "fps.h"
 
