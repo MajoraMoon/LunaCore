@@ -10,17 +10,23 @@ void Renderer::setup()
     const std::vector<GLfloat> vertexPosition{
 
         // X    Y     Z
-        -0.8f, -0.8f, 0.0f, 1.0f, 0.0f, 0.0f, // vertex 1 - left position and rgb color - red
-        0.8f, -0.8f, 0.0f, 0.0f, 1.0f, 0.0f,  // vertex 2 - right position and rgb color - green
-        0.0f, 0.8f, 0.0f, 0.0f, 0.0f, 1.0f    // vertex 3 - top position and rgb color - blue
+        -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // vertex 0 - bottom left position and rgb color - red
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // vertex 1 - bottom right position and rgb color - green
+        -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,  // vertex 2 - top left position and rgb color - blue
+
+        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // vertex 3 - top right position and rgb color - green
 
     };
+
+    const std::vector<GLuint> elementBufferData{2, 0, 1, 3, 2, 1};
 
     vao = std::make_unique<VertexArrayObject>();
 
     vao->bindVAO();
 
     vbo = std::make_unique<VertexBufferObject>(vertexPosition.size() * sizeof(GLfloat), vertexPosition.data(), GL_STATIC_DRAW);
+
+    ebo = std::make_unique<ElementBufferObject>();
 
     vao->setAttributePointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (GLvoid *)0);
 
@@ -30,8 +36,9 @@ void Renderer::setup()
 
     vao->enableAttribute(1);
 
-    // vao->unbindVAO();
-    //  vao->disableAttribute(0);
+    ebo->bindEBO();
+
+    ebo->bufferData(GL_ELEMENT_ARRAY_BUFFER, elementBufferData.size() * sizeof(GLuint), elementBufferData.data(), GL_STATIC_DRAW);
 }
 
 void Renderer::render()
@@ -44,7 +51,8 @@ void Renderer::render()
 
     vao->bindVAO();
 
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     SDL_GL_SwapWindow(window);
 

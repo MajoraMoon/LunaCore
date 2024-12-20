@@ -10,6 +10,7 @@
 
 #include "VertexArrayObject.h"
 #include "VertexBufferObject.h"
+#include "ElementBufferObject.h"
 #include "Shader.h"
 #include "SDLGLwindow.h"
 #include "fps.h"
@@ -25,6 +26,7 @@ private:
     std::unique_ptr<Shader> shader;
     std::unique_ptr<VertexArrayObject> vao;
     std::unique_ptr<VertexBufferObject> vbo;
+    std::unique_ptr<ElementBufferObject> ebo;
 
 public:
     Renderer(SDL_Window *window, SDL_GLContext glContext, SDLGLwindow &sdgl_window);
