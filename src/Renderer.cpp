@@ -10,9 +10,9 @@ void Renderer::setup()
     const std::vector<GLfloat> vertexPosition{
 
         // X    Y     Z
-        -0.8f, -0.8f, 0.0f, // vertex 1
-        0.8f, -0.8f, 0.0f,  // vertex 2
-        0.0f, 0.8f, 0.0f    // vertex 3
+        -0.8f, -0.8f, 0.0f, 1.0f, 0.0f, 0.0f, // vertex 1 - left position and rgb color - red
+        0.8f, -0.8f, 0.0f, 0.0f, 1.0f, 0.0f,  // vertex 2 - right position and rgb color - green
+        0.0f, 0.8f, 0.0f, 0.0f, 0.0f, 1.0f    // vertex 3 - top position and rgb color - blue
 
     };
 
@@ -22,9 +22,13 @@ void Renderer::setup()
 
     vbo = std::make_unique<VertexBufferObject>(vertexPosition.size() * sizeof(GLfloat), vertexPosition.data(), GL_STATIC_DRAW);
 
-    vao->setAttributePointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+    vao->setAttributePointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (GLvoid *)0);
 
     vao->enableAttribute(0);
+    // rgb
+    vao->setAttributePointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (GLvoid *)(sizeof(GLfloat) * 3));
+
+    vao->enableAttribute(1);
 
     // vao->unbindVAO();
     //  vao->disableAttribute(0);
