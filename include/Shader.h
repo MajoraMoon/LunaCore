@@ -15,14 +15,15 @@ private:
 
     void compile(const char *vertexShaderCode, const char *fragmentShaderCode);
 
-    GLuint compileShader(const char *code, Glenum shaderType);
+    GLuint compileShader(const char *code, GLenum shaderType);
 
-    void checkCompileErrors(Gluint object, const std::string &type);
+    void checkCompileErrors(GLuint object, const std::string &type);
 
 public:
     GLuint shaderID;
 
     Shader(const std::string &vertexPath, const std::string &fragmentPath);
+    ~Shader();
 
     void useShaderProgram() const;
     void deleteShaderProgram();

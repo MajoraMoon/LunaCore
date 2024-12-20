@@ -8,6 +8,11 @@ Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath)
     compile(vertexShaderCode.c_str(), fragmentShaderCode.c_str());
 }
 
+Shader::~Shader()
+{
+    glDeleteProgram(shaderID);
+}
+
 void Shader::useShaderProgram() const
 {
     glUseProgram(shaderID);
@@ -24,6 +29,7 @@ std::string Shader::readFile(const std::string &filePath)
     if (!file.is_open())
     {
         std::cerr << "ERROR: Unable to open file " << filePath << std::endl;
+        SDL_Log("lol fuck you ");
         return "";
     }
     std::stringstream buffer;
@@ -46,7 +52,7 @@ void Shader::compile(const char *vertexShaderCode, const char *fragmentShaderCod
     glDeleteShader(fragmentShader);
 }
 
-GLuint Shader::compileShader(const char *code, Glenum shaderType)
+GLuint Shader::compileShader(const char *code, GLenum shaderType)
 {
     GLuint shader = glCreateShader(shaderType);
     glShaderSource(shader, 1, &code, nullptr);
@@ -55,7 +61,7 @@ GLuint Shader::compileShader(const char *code, Glenum shaderType)
     return shader;
 }
 
-void Shader::checkCompileErrors(Gluint object, const std::string &type)
+void Shader::checkCompileErrors(GLuint object, const std::string &type)
 {
     GLint success;
     char infoLog[1024];

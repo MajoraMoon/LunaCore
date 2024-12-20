@@ -9,8 +9,9 @@ class VertexArrayObject
 public:
     GLuint vaoID;
 
-    // Takes in the Number of VAO's and an array, where the number of VAO's are stored inside.
     VertexArrayObject();
+
+    ~VertexArrayObject();
 
     void bindVAO() const;
 

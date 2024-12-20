@@ -7,6 +7,11 @@ VertexBufferObject::VertexBufferObject(GLsizeiptr sizeInBytes, const GLvoid *dat
     glBufferData(GL_ARRAY_BUFFER, sizeInBytes, data, usage);
 }
 
+VertexBufferObject::~VertexBufferObject()
+{
+    glDeleteBuffers(1, &vboID);
+}
+
 void VertexBufferObject::Bind() const
 {
     glBindBuffer(GL_ARRAY_BUFFER, vboID);

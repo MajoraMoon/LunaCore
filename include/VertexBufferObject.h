@@ -11,6 +11,8 @@ public:
 
     VertexBufferObject(GLsizeiptr sizeInBytes, const GLvoid *data, GLenum usage);
 
+    ~VertexBufferObject();
+
     void Bind() const;
 
     void Unbind() const;

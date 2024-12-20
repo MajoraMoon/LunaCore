@@ -1,10 +1,17 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include <memory>
+#include <vector>
+#include <stdexcept>
+
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
+
+#include "VertexArrayObject.h"
+#include "VertexBufferObject.h"
+#include "Shader.h"
 #include "SDLGLwindow.h"
-#include <stdexcept>
 #include "fps.h"
 
 class Renderer
@@ -14,9 +21,14 @@ private:
     SDL_GLContext glContext;
     SDLGLwindow &sdgl_window;
     bool running;
-    /* data */
+
+    std::unique_ptr<Shader> shader;
+    std::unique_ptr<VertexArrayObject> vao;
+    std::unique_ptr<VertexBufferObject> vbo;
+
 public:
     Renderer(SDL_Window *window, SDL_GLContext glContext, SDLGLwindow &sdgl_window);
+    void setup();
     void render();
     void handleInputEvents();
     bool isRunning() const;

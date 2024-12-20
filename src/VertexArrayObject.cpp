@@ -5,6 +5,11 @@ VertexArrayObject::VertexArrayObject()
     glGenVertexArrays(1, &vaoID);
 }
 
+VertexArrayObject::~VertexArrayObject()
+{
+    glDeleteVertexArrays(1, &vaoID);
+}
+
 void VertexArrayObject::bindVAO() const
 {
     glBindVertexArray(vaoID);
