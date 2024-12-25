@@ -6,6 +6,7 @@
 #include <stdexcept>
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <glad/glad.h>
 
 #include "VertexArrayObject.h"
@@ -22,6 +23,7 @@ private:
     SDL_GLContext glContext;
     SDLGLwindow &sdgl_window;
     bool running;
+    GLuint texture;
 
     std::unique_ptr<Shader> shader;
     std::unique_ptr<VertexArrayObject> vao;

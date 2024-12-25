@@ -38,6 +38,13 @@ bool SDLGLwindow::init()
         return false;
     }
 
+    if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) & (IMG_INIT_PNG | IMG_INIT_JPG)))
+    {
+        std::cerr << "Failed to initialize SDL_image: " << IMG_GetError() << std::endl;
+        SDL_Quit();
+        return false;
+    }
+
     glContext = SDL_GL_CreateContext(window);
 
     if (!glContext)

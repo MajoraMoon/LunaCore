@@ -29,7 +29,7 @@ std::string Shader::readFile(const std::string &filePath)
     if (!file.is_open())
     {
         std::cerr << "ERROR: Unable to open file " << filePath << std::endl;
-        SDL_Log("lol fuck you ");
+
         return "";
     }
     std::stringstream buffer;
@@ -65,24 +65,26 @@ void Shader::checkCompileErrors(GLuint object, const std::string &type)
 {
     GLint success;
     char infoLog[1024];
+
     if (type == "PROGRAM")
     {
+        // Überprüfen, ob das Programm erfolgreich gelinkt wurde
         glGetProgramiv(object, GL_LINK_STATUS, &success);
         if (!success)
         {
             glGetProgramInfoLog(object, 1024, nullptr, infoLog);
-            std::cerr << "ERROR::SHADER:PROGRAM::LINKING_FAILED\n"
+            std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n"
                       << infoLog << std::endl;
         }
-        else
+    }
+    else
+    {
+        glGetShaderiv(object, GL_COMPILE_STATUS, &success);
+        if (!success)
         {
-            glGetShaderiv(object, GL_COMPILE_STATUS, &success);
-            if (!success)
-            {
-                glGetShaderInfoLog(object, 1024, nullptr, infoLog);
-                std::cerr << "ERROR::SHADER::" << type << "::COMPILATION_FAILED\n"
-                          << infoLog << std::endl;
-            }
+            glGetShaderInfoLog(object, 1024, nullptr, infoLog);
+            std::cerr << "ERROR::SHADER::" << type << "::COMPILATION_FAILED\n"
+                      << infoLog << std::endl;
         }
     }
 }
