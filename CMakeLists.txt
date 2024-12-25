@@ -10,23 +10,32 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
 file(GLOB SOURCES "src/*.cpp")
-
-
 set(GLAD_SRC ${CMAKE_SOURCE_DIR}/lib/glad/src/glad.c)
-
+set_source_files_properties(${GLAD_SRC} PROPERTIES LANGUAGE C)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 
-set_source_files_properties(${GLAD_SRC} PROPERTIES LANGUAGE C)
+file(GLOB IMGUI_SOURCES 
+    ${CMAKE_SOURCE_DIR}/lib/imgui/*.cpp
+    ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_sdl2.cpp
+    ${CMAKE_SOURCE_DIR}/lib/imgui/backends/imgui_impl_opengl3.cpp
+)
 
 
-add_executable(app ${SOURCES} ${GLAD_SRC})
+
+add_executable(app ${SOURCES} ${GLAD_SRC} ${IMGUI_SOURCES})
 
 
 
 
-target_include_directories(app PRIVATE ${CMAKE_SOURCE_DIR}/lib/glad/include)
+target_include_directories(app PRIVATE 
+    ${CMAKE_SOURCE_DIR}/lib/glad/include
+    ${CMAKE_SOURCE_DIR}/lib/imgui
+    ${CMAKE_SOURCE_DIR}/lib/imgui/backends
+    ${CMAKE_SOURCE_DIR}/include
+)
+
 
 # Windows specific configuriation. SDL2 is on the C-Drive.
 if(WIN32)
@@ -69,7 +78,8 @@ elseif(UNIX)
     include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
 
  
-    target_link_libraries(app PRIVATE ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
+    target_link_libraries(app PRIVATE SDL2 SDL2_image)
+
 
 
     target_include_directories(app PRIVATE ${CMAKE_SOURCE_DIR}/include)

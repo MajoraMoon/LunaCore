@@ -1,5 +1,15 @@
 #include <Renderer.h>
 
+void Renderer::showFPSWindow()
+{
+
+    ImGui::Begin("Performance");
+    ImGui::Text("FPS (per frame): %.1f", fps);
+    ImGui::Text("Delta Time: %.4f", deltaTime);
+    ImGui::Text("FPS (per second): %.1f", stableFPS);
+    ImGui::End();
+}
+
 unsigned char *loadImage(const char *filePath, int &width, int &height, int &nrChannels)
 {
 
@@ -84,7 +94,7 @@ void Renderer::setup()
 
     GLsizei width, height, nrChannels;
 
-    unsigned char *imgData = loadImage("../assets/textures/rusty_metal_grid_diff.jpg", width, height, nrChannels);
+    unsigned char *imgData = loadImage("../assets/textures/rocky_terrain_diff_4k.jpg", width, height, nrChannels);
 
     if (imgData)
     {
@@ -106,6 +116,27 @@ void Renderer::setup()
 
 void Renderer::render()
 {
+
+    float currentFrame = SDL_GetTicks() / 1000.0f;
+
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+    fps = 1.0f / deltaTime;
+
+    timeAccumulator += deltaTime;
+    frameCount++;
+
+    if (timeAccumulator >= 1.0f)
+    {
+        stableFPS = frameCount / timeAccumulator;
+        frameCount = 0;
+        timeAccumulator = 0.0f;
+    }
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+
     glViewport(0, 0, sdgl_window.getInitWidth(), sdgl_window.getInitHeight());
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -118,9 +149,18 @@ void Renderer::render()
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-    SDL_GL_SwapWindow(window);
+    showFPSWindow();
 
-    OutPut_fps();
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+#ifdef _WIN32
+
+    ImGui::UpdatePlatformWindows();
+    ImGui::RenderPlatformWindowsDefault();
+
+#endif
+    SDL_GL_SwapWindow(window);
 }
 
 void Renderer::handleInputEvents()
@@ -137,6 +177,8 @@ void Renderer::handleInputEvents()
         {
             running = false;
         }
+
+        ImGui_ImplSDL2_ProcessEvent(&event);
     }
 }
 
