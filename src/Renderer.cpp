@@ -1,15 +1,5 @@
 #include <Renderer.h>
 
-void Renderer::showFPSWindow()
-{
-
-    ImGui::Begin("Performance");
-    ImGui::Text("FPS (per frame): %.1f", fps);
-    ImGui::Text("Delta Time: %.4f", deltaTime);
-    ImGui::Text("FPS (per second): %.1f", stableFPS);
-    ImGui::End();
-}
-
 unsigned char *loadImage(const char *filePath, int &width, int &height, int &nrChannels)
 {
 
@@ -34,11 +24,14 @@ unsigned char *loadImage(const char *filePath, int &width, int &height, int &nrC
     return byteDataImg;
 }
 
+// Creating the inital Render Object is turning vsync off as default. It can be turned on in the Dear Imgui panel.
 Renderer::Renderer(SDL_Window *window, SDL_GLContext glContext, SDLGLwindow &sdgl_window)
-    : window(window), glContext(glContext), running(true), sdgl_window(sdgl_window)
+    : window(window), glContext(glContext), running(true), sdgl_window(sdgl_window), currentVsyncMode(VSync_Off)
 {
+    activateVsync(currentVsyncMode);
 }
 
+// setting up all vertex and array object before starting the actual rendering
 void Renderer::setup()
 {
     shader = std::make_unique<Shader>("../shader/vertexShader.vert", "../shader/fragmentShader.frag");
@@ -53,20 +46,25 @@ void Renderer::setup()
 
     };
 
+    // going through all corners of the rectangles, starting counting from 0.
     const std::vector<GLuint> elementBufferData{0, 1, 2, 1, 3, 2};
 
+    // later maybe making it work on the stack instead on the heap although it is working with smart pointers...
+    // all these objects are creating *one* vao or vbo (whatever) e.g. glGenBuffers(1, &vboID);
     vao = std::make_unique<VertexArrayObject>();
 
     vao->bindVAO();
 
+    // vbo is already binded when calling the constuctors
     vbo = std::make_unique<VertexBufferObject>(vertexPosition.size() * sizeof(GLfloat), vertexPosition.data(), GL_STATIC_DRAW);
 
     ebo = std::make_unique<ElementBufferObject>();
 
+    // Pointing to the vertices
     vao->setAttributePointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 8, (GLvoid *)0);
 
     vao->enableAttribute(0);
-    // rgb
+    // Pointing to the rgb values
     vao->setAttributePointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 8, (GLvoid *)(sizeof(GLfloat) * 3));
 
     vao->enableAttribute(1);
@@ -75,7 +73,7 @@ void Renderer::setup()
 
     ebo->bufferData(GL_ELEMENT_ARRAY_BUFFER, elementBufferData.size() * sizeof(GLuint), elementBufferData.data(), GL_STATIC_DRAW);
 
-    // Points the index 2 in the vao to the texture coordsi in the vbo. with stride 8 and offset 6.
+    // Pointing to the coords of the texture. With stride 8 and offset 6.
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 8, (GLvoid *)(sizeof(GLfloat) * 6));
     glEnableVertexAttribArray(2);
 
@@ -107,8 +105,7 @@ void Renderer::setup()
 
     else
     {
-        std::cout << "Failed to loa texture" << std::endl;
-        SDL_Log("hello");
+        std::cout << "Failed to load texture" << std::endl;
     }
 
     delete[] imgData;
@@ -116,7 +113,14 @@ void Renderer::setup()
 
 void Renderer::render()
 {
+    // little logic , so the "SDL_GL_SetSwapInterval()" won't be called every frame. It will be called once when the vsync settings changed.
+    if (currentVsyncMode != lastVsyncMode)
+    {
+        activateVsync(currentVsyncMode);
+        lastVsyncMode = currentVsyncMode;
+    }
 
+    // calculating delta time and the Frame Rate per second. the "StableFPS" is putting out the fps value every new second. so it's better to see the average value.
     float currentFrame = SDL_GetTicks() / 1000.0f;
 
     deltaTime = currentFrame - lastFrame;
@@ -133,6 +137,7 @@ void Renderer::render()
         timeAccumulator = 0.0f;
     }
 
+    // Dear ImGui set up
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
@@ -149,17 +154,11 @@ void Renderer::render()
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-    showFPSWindow();
+    showInformation();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-#ifdef _WIN32
-
-    ImGui::UpdatePlatformWindows();
-    ImGui::RenderPlatformWindowsDefault();
-
-#endif
     SDL_GL_SwapWindow(window);
 }
 
@@ -168,6 +167,8 @@ void Renderer::handleInputEvents()
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
+        ImGui_ImplSDL2_ProcessEvent(&event);
+
         if (event.type == SDL_QUIT)
         {
             running = false;
@@ -177,12 +178,50 @@ void Renderer::handleInputEvents()
         {
             running = false;
         }
-
-        ImGui_ImplSDL2_ProcessEvent(&event);
     }
 }
 
+// just returns a bool for the running renderer. The constructor is setting the bool to "true" as default. Otherwise this all here would not work lol
 bool Renderer::isRunning() const
 {
     return running;
+}
+
+// adding the "adaptive Vsync" setting from SDL2 is crashing the applicaton for some reason. removed it because of that.
+void Renderer::activateVsync(VsyncMode vsync)
+{
+
+    switch (vsync)
+    {
+    case VSync_On:
+        SDL_GL_SetSwapInterval(1);
+        break;
+    case VSync_Off:
+        SDL_GL_SetSwapInterval(0);
+        break;
+    default:
+        throw std::invalid_argument("You usually cannot get this error message.\n If you did tho, you fucked up the vsync setting somehow, good job!");
+        break;
+    }
+}
+
+// Just render useful information in a simple Dear ImGui window.
+void Renderer::showInformation()
+{
+
+    ImGui::Begin("Useful Information");
+    ImGui::Text("FPS (per frame): %.1f", fps);
+    ImGui::Text("Delta Time: %.5f", deltaTime);
+    ImGui::Text("FPS (per second): %.1f", stableFPS);
+
+    const char *vsyncOptions[] = {"Vsync Off", "Vsync On"};
+    int currentVSyncIndex = static_cast<int>(currentVsyncMode);
+
+    if (ImGui::Combo("VSync Mode", &currentVSyncIndex, vsyncOptions, IM_ARRAYSIZE(vsyncOptions)))
+    {
+        currentVsyncMode = static_cast<VsyncMode>(currentVSyncIndex);
+        activateVsync(currentVsyncMode);
+    }
+
+    ImGui::End();
 }

@@ -1,7 +1,9 @@
 #include "SDLGLwindow.h"
 
 SDLGLwindow::SDLGLwindow(const std::string &title, GLuint width, GLuint height)
-    : title(title), width(width), height(height), window(nullptr) {}
+    : title(title), width(width), height(height), window(nullptr), glContext(nullptr)
+{
+}
 
 SDLGLwindow::~SDLGLwindow()
 {
@@ -22,7 +24,7 @@ bool SDLGLwindow::init()
     // First, initiate SDL. Here initiating sdl-subsystem
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initiate SDL: %s\n", SDL_GetError);
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initiate SDL: %s\n", SDL_GetError());
         return false;
     }
 
@@ -46,6 +48,7 @@ bool SDLGLwindow::init()
     if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) & (IMG_INIT_PNG | IMG_INIT_JPG)))
     {
         std::cerr << "Failed to initialize SDL_image: " << IMG_GetError() << std::endl;
+        IMG_Quit();
         SDL_Quit();
         return false;
     }
@@ -69,33 +72,26 @@ bool SDLGLwindow::init()
         return false;
     }
 
+    // Using the "Docking" branch of Dear ImGui.
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable keyboard controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable gamepad controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+    // who needs light mode
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplSDL2_InitForOpenGL(getSDLWindow(), getGLContext());
+
+    ImGui_ImplOpenGL3_Init("#version 450");
+
     return true;
 }
 
-// "1" will activate Vsync. Any other value will deactivate Vsync.
-void SDLGLwindow::activateVsync(int vsync)
-{
-
-    switch (vsync)
-    {
-    case 1:
-        SDL_GL_SetSwapInterval(1);
-        break;
-
-    case -1:
-        SDL_GL_SetSwapInterval(-1);
-        break;
-
-    case 0:
-        SDL_GL_SetSwapInterval(0);
-        break;
-    default:
-        throw std::invalid_argument("Invalid value to activate Vsync.\nPut either '1' to activate Vsync,\n'0' to deactivate Vsync,\n-1 to activate adaptive Vsync (if available)");
-        break;
-    }
-}
-
-SDL_Window *SDLGLwindow::getWindow() const
+SDL_Window *SDLGLwindow::getSDLWindow() const
 {
     return window;
 }

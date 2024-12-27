@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 set(GLAD_SRC ${CMAKE_SOURCE_DIR}/lib/glad/src/glad.c)
 set_source_files_properties(${GLAD_SRC} PROPERTIES LANGUAGE C)
 
@@ -34,6 +34,7 @@ target_include_directories(app PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/imgui
     ${CMAKE_SOURCE_DIR}/lib/imgui/backends
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include/wrappers
 )
 
 

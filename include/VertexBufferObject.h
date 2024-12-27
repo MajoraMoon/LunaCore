@@ -1,7 +1,7 @@
 #ifndef VERTEXBUFFEROBJECT_H
 #define VERTEXBUFFEROBJECT_H
 
-#include <glad/glad.h>
+#include <SDLGL.h>
 
 class VertexBufferObject
 {

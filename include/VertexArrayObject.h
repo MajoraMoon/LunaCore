@@ -1,7 +1,7 @@
 #ifndef VERTEXARRAYOBJECT_H
 #define VERTEXARRAYOBJECT_H
 
-#include <glad/glad.h>
+#include <SDLGL.h>
 
 class VertexArrayObject
 {

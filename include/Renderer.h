@@ -4,15 +4,9 @@
 #include <memory>
 #include <vector>
 #include <stdexcept>
-#include <cmath>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <glad/glad.h>
-
-#include <imgui.h>
-#include <imgui_impl_sdl2.h>
-#include <imgui_impl_opengl3.h>
+#include <SDLGL.h>
+#include <ImGuiSDLGL.h>
 
 #include "VertexArrayObject.h"
 #include "VertexBufferObject.h"
@@ -22,7 +16,21 @@
 
 class Renderer
 {
+public:
+    Renderer(SDL_Window *window, SDL_GLContext glContext, SDLGLwindow &sdgl_window);
+    void setup();
+    void render();
+    void handleInputEvents();
+    bool isRunning() const;
+    void showInformation();
+
 private:
+    enum VsyncMode
+    {
+        VSync_Off = 0,
+        VSync_On = 1
+    };
+
     SDL_Window *window;
     SDL_GLContext glContext;
     SDLGLwindow &sdgl_window;
@@ -36,18 +44,15 @@ private:
     float timeAccumulator = 0.0f;
     int frameCount = 0;
 
+    VsyncMode currentVsyncMode;
+    VsyncMode lastVsyncMode = VSync_Off;
+
     std::unique_ptr<Shader> shader;
     std::unique_ptr<VertexArrayObject> vao;
     std::unique_ptr<VertexBufferObject> vbo;
     std::unique_ptr<ElementBufferObject> ebo;
 
-public:
-    Renderer(SDL_Window *window, SDL_GLContext glContext, SDLGLwindow &sdgl_window);
-    void setup();
-    void render();
-    void handleInputEvents();
-    bool isRunning() const;
-    void showFPSWindow();
+    void activateVsync(VsyncMode vsync);
 };
 
 #endif
