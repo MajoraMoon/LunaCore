@@ -151,7 +151,7 @@ void Renderer::render()
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-    showInformation();
+    showInformationImGui();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -203,7 +203,7 @@ void Renderer::activateVsync(VsyncMode vsync)
 }
 
 // Just render useful information in a simple Dear ImGui window.
-void Renderer::showInformation()
+void Renderer::showInformationImGui()
 {
 
     ImGui::Begin("Useful Information");

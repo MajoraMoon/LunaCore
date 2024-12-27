@@ -20,7 +20,7 @@ public:
     void render();
     void handleInputEvents();
     bool isRunning() const;
-    void showInformation();
+    void showInformationImGui();
 
 private:
     enum VsyncMode
