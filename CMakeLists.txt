@@ -35,6 +35,7 @@ target_include_directories(app PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/imgui/backends
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/include/wrappers
+    ${CMAKE_SOURCE_DIR}/include/buffer
 )
 
 

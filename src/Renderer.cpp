@@ -96,9 +96,6 @@ void Renderer::setup()
 
     if (imgData)
     {
-        std::cout << "Image loaded successfully." << std::endl;
-        std::cout << "Width: " << width << ", Height: " << height << ", Channels " << nrChannels << std::endl;
-
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, imgData);
         glGenerateMipmap(GL_TEXTURE_2D);
     }

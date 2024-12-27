@@ -8,9 +8,7 @@
 #include <SDLGL.h>
 #include <ImGuiSDLGL.h>
 
-#include "VertexArrayObject.h"
-#include "VertexBufferObject.h"
-#include "ElementBufferObject.h"
+#include "Buffer.h"
 #include "Shader.h"
 #include "SDLGLwindow.h"
 

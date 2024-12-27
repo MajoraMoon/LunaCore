@@ -1,11 +1,5 @@
-#include <vector>
-
-#include <ImGuiSDLGL.h>
-
 #include "SDLGLwindow.h"
 #include "Renderer.h"
-#include "VertexArrayObject.h"
-#include "VertexBufferObject.h"
 
 int main(int argc, char *argv[])
 {
