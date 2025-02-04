@@ -29,14 +29,26 @@ file(GLOB IMGUI_SOURCES
 add_library(imgui STATIC ${IMGUI_SOURCES})
 set_target_properties(imgui PROPERTIES LANGUAGE CXX)
 
-# Wichtige Include-Pfade für ImGui auch für das Library-Target
 target_include_directories(imgui PUBLIC
     ${CMAKE_SOURCE_DIR}/lib/imgui
     ${CMAKE_SOURCE_DIR}/lib/imgui/backends
 )
 
+add_library(imgui_c STATIC src/imgui_c.cpp)
+set_target_properties(imgui_c PROPERTIES LANGUAGE CXX)
+
+target_include_directories(imgui_c PRIVATE
+    ${CMAKE_SOURCE_DIR}/lib/imgui
+    ${CMAKE_SOURCE_DIR}/lib/imgui/backends
+    ${CMAKE_SOURCE_DIR}/include      
+)
+
+
 add_executable(LunaCore ${SOURCES} ${GLAD_SRC})
-target_link_libraries(LunaCore PRIVATE imgui)
+target_link_libraries(LunaCore PRIVATE imgui_c imgui )
+
+
+
 
 target_include_directories(LunaCore PRIVATE 
     ${CMAKE_SOURCE_DIR}/lib/glad/include
@@ -60,6 +72,7 @@ find_package(SDL3_image REQUIRED CONFIG)
 
 set(SDL3_INCLUDE_DIR "C:/SDL3/x86_64-w64-mingw32/include")
 target_include_directories(imgui PRIVATE ${SDL3_INCLUDE_DIR})
+target_include_directories(imgui_c PRIVATE ${SDL3_INCLUDE_DIR})
 
 
 

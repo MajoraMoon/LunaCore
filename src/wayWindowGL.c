@@ -2,12 +2,14 @@
 
 SDL_Window *initWayWindowGL(const char *title, const char *version,
                             unsigned int width, unsigned int height,
-                            bool resizableWindow) {
+                            bool resizableWindow)
+{
 
   // Metadata is new in SDL3, why not using it :)
   SDL_SetAppMetadata(title, version, NULL);
 
-  if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
+  if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO))
+  {
     SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
 
     return NULL;
@@ -20,7 +22,8 @@ SDL_Window *initWayWindowGL(const char *title, const char *version,
   // instead of creating a window with properties directly, using the more
   // modular approach here.
   SDL_PropertiesID props = SDL_CreateProperties();
-  if (props == 0) {
+  if (props == 0)
+  {
     SDL_Log("Unable to create properties: %s", SDL_GetError());
 
     return NULL;
@@ -36,7 +39,8 @@ SDL_Window *initWayWindowGL(const char *title, const char *version,
 
   SDL_Window *window = SDL_CreateWindowWithProperties(props);
 
-  if (window == NULL) {
+  if (window == NULL)
+  {
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
                  "Could not initiate Window with custom wayland context: %s\n",
                  SDL_GetError());
@@ -49,11 +53,13 @@ SDL_Window *initWayWindowGL(const char *title, const char *version,
   return window;
 }
 
-SDL_GLContext initOpenGLContext_and_glad(SDL_Window *window) {
+SDL_GLContext initOpenGLContext_and_glad(SDL_Window *window)
+{
 
   SDL_GLContext glContext = SDL_GL_CreateContext(window);
 
-  if (!glContext) {
+  if (!glContext)
+  {
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
                  "Could not create OpenGL context: %s\n", SDL_GetError());
     SDL_DestroyWindow(window);
@@ -61,7 +67,8 @@ SDL_GLContext initOpenGLContext_and_glad(SDL_Window *window) {
     return false;
   }
 
-  if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+  if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
+  {
     printf("Failed to initialize GLAD\n");
     SDL_GL_DestroyContext(glContext);
     SDL_DestroyWindow(window);
@@ -72,7 +79,19 @@ SDL_GLContext initOpenGLContext_and_glad(SDL_Window *window) {
   return glContext;
 }
 
-void cleanupWindow(SDL_Window *window, SDL_GLContext glContext) {
+void initImGUI(SDL_Window *window, SDL_GLContext *glContext)
+{
+
+  ImGui_CreateContext();
+  ImGui_SetupIO();
+  ImGui_StyleColorsDark();
+
+  ImGui_implSDL3_InitForOpenGL(window, glContext);
+  ImGui_ImplOpenGL3_Init_("#version 460");
+}
+
+void cleanupWindow(SDL_Window *window, SDL_GLContext glContext)
+{
 
   SDL_GL_DestroyContext(glContext);
   SDL_DestroyWindow(window);

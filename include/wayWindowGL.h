@@ -3,9 +3,11 @@
 #define WAYWINDOW_H
 
 // clang-format off
+#include <glad/glad.h>
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
-#include <glad/glad.h>
+#include "imgui_c.h"
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -17,6 +19,8 @@ SDL_Window *initWayWindowGL(const char *title, const char *version,
                             bool resizableWindow);
 
 SDL_GLContext initOpenGLContext_and_glad(SDL_Window *window);
+
+void initImGUI(SDL_Window *window, SDL_GLContext *glContext);
 
 void cleanupWindow(SDL_Window *window, SDL_GLContext glContext);
 
