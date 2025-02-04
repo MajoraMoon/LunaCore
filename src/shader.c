@@ -1,10 +1,12 @@
-#include <ShaderC.h>
+#include <Shader.h>
 
 // intern function to read glsl shader files
-static char *readFile(const char *filePath) {
+static char *readFile(const char *filePath)
+{
   // open file
   FILE *file = fopen(filePath, "r");
-  if (!file) {
+  if (!file)
+  {
     printf("ERROR: Unable to open file %s\n", filePath);
     return NULL;
   }
@@ -21,7 +23,8 @@ static char *readFile(const char *filePath) {
 
   char *buffer = (char *)malloc(legth + 1);
 
-  if (!buffer) {
+  if (!buffer)
+  {
     printf("ERROR: Memory allocation failed, trying to reading a file...\n");
     fclose(file);
     return NULL;
@@ -38,21 +41,27 @@ static char *readFile(const char *filePath) {
 }
 
 // checks for shader compilation errors
-static void checkShaderCompileErrors(unsigned int shader, const char *type) {
+static void checkShaderCompileErrors(unsigned int shader, const char *type)
+{
   int success;
   char infoLog[1024];
 
   // maybe a little bit confusing here, anyway. that means:
   // throwing compiling error when the fragment or vertex shader fails,
   // otherwise it's a program failure :)
-  if (type != "PROGRAM") {
+  if (type != "PROGRAM")
+  {
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
+    if (!success)
+    {
       glGetShaderInfoLog(shader, 1024, NULL, infoLog);
       printf("ERROR::SHADER::%s::COMPILATION_FAILED\n%s\n", type, infoLog);
-    } else {
+    }
+    else
+    {
       glGetProgramiv(shader, GL_LINK_STATUS, &success);
-      if (!success) {
+      if (!success)
+      {
         glGetProgramInfoLog(shader, 1024, NULL, infoLog);
         printf("ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
       }
@@ -60,14 +69,16 @@ static void checkShaderCompileErrors(unsigned int shader, const char *type) {
   }
 }
 
-Shader createShader(const char *vertexPath, const char *fragmentPath) {
+Shader createShader(const char *vertexPath, const char *fragmentPath)
+{
   Shader shader;
   shader.ID = 0;
 
   char *vertexData = readFile(vertexPath);
   char *fragmentData = readFile(fragmentPath);
 
-  if (!vertexData || !fragmentData) {
+  if (!vertexData || !fragmentData)
+  {
     printf("ERROR: Shader source code could not be read\n");
     free(vertexData);
     free(fragmentData);
@@ -106,7 +117,8 @@ Shader createShader(const char *vertexPath, const char *fragmentPath) {
 
 void useShader(const Shader *shader) { glUseProgram(shader->ID); }
 
-void deleteShader(Shader *shader) {
+void deleteShader(Shader *shader)
+{
   glDeleteProgram(shader->ID);
   shader->ID = 0;
 }

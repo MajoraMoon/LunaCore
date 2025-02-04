@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ShaderC.h"
+#include <Shader.h>
 #include "wayWindowGL.h"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>

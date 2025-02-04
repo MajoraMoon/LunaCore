@@ -44,19 +44,37 @@ target_include_directories(LunaCore PRIVATE
 )
 
 
-# Windows specific configuriation. SDL2 is on the C-Drive.
+# Windows specific configuriation. SDL3 is on the C-Drive.
 if(WIN32)
 
-    # set here for windows later (SDL3 SDL3_Image)
+set(CMAKE_PREFIX_PATH "C:/SDL3/cmake;C:/SDL3_image/cmake")
 
-    add_custom_command(TARGET app POST_BUILD
+
+target_include_directories(LunaCore PRIVATE C:/SDL3/x86_64-w64-mingw32/include)
+find_package(SDL3 REQUIRED CONFIG)
+
+target_include_directories(LunaCore PRIVATE ${SDL3_INCLUDE_DIRS})
+
+target_include_directories(LunaCore PRIVATE C:/SDL3_image/x86_64-w64-mingw32/include)
+find_package(SDL3_image REQUIRED CONFIG)
+
+set(SDL3_INCLUDE_DIR "C:/SDL3/x86_64-w64-mingw32/include")
+target_include_directories(imgui PRIVATE ${SDL3_INCLUDE_DIR})
+
+
+
+target_link_libraries(LunaCore PRIVATE "C:/SDL3/x86_64-w64-mingw32/bin/SDL3.dll")
+target_link_libraries(LunaCore PRIVATE "C:/SDL3_image/x86_64-w64-mingw32/bin/SDL3_image.dll")
+
+
+    add_custom_command(TARGET LunaCore POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        C:/SDL2/x86_64-w64-mingw32/bin/SDL2.dll
-        $<TARGET_FILE_DIR:app>)
-    add_custom_command(TARGET app POST_BUILD
+        "C:/SDL3/x86_64-w64-mingw32/bin/SDL3.dll"
+        $<TARGET_FILE_DIR:LunaCore>)
+    add_custom_command(TARGET LunaCore POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        C:/SDL2_image/x86_64-w64-mingw32/bin/SDL2_image.dll
-        $<TARGET_FILE_DIR:app>)
+        "C:/SDL3_image/x86_64-w64-mingw32/bin/SDL3_image.dll"
+        $<TARGET_FILE_DIR:LunaCore>)
 
 
 elseif(UNIX)

@@ -1,12 +1,13 @@
-#ifndef SHADERC_H
-#define SHADERC_H
+#ifndef SHADER_H
+#define SHADER_H
 // clang-format off
 #include <glad/glad.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 // clang-format on
-typedef struct Shader {
+typedef struct Shader
+{
   unsigned int ID; // OpenGL shader programm ID
 } Shader;
 
