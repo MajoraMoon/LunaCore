@@ -13,23 +13,27 @@ typedef struct IMGuiVec2 {
   float x, y;
 } IMGuiVec2;
 
-void ImGui_CreateContext();
-void ImGui_SetupIO();
-void ImGui_StyleColorsDark();
+void ImGui_CreateContext_C();
+void ImGui_SetupIO_C();
+void ImGui_StyleColorsDark_C();
 void ImGui_implSDL3_InitForOpenGL_C(void *window, void *context);
 void ImGui_ImplOpenGL3_Init_C(const char *glsl_version);
 
 void ImGui_ImplOpenGL3_NewFrame_C();
 void ImGui_ImplSDL3_NewFrame_C();
 void ImGui_NewFrame_C();
-void ImGui_ShowDemoWindow();
 void ImGui_Render_C();
 void ImGui_ImplOpenGL3_RenderDrawData_C();
+
 void ImGui_ImplSDL3_ProcessEvent_C(void *event);
 
-#define ImGuiConfigFlags_NavEnableKeyboard 1
-#define ImGuiConfigFlags_NavEnableGamepad 2
-#define ImGuiConfigFlags_DockingEnable 4
+void ImGui_ShowDemoWindow_C();
+
+void ImGui_Begin_C(const char *window_information);
+void ImGui_End_c();
+void ImGui_Text_c(const char *format, ...);
+
+void ImGui_VsyncCombo_C();
 
 #ifdef __cplusplus
 }
