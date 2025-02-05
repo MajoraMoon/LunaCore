@@ -20,7 +20,7 @@ SDL_Window *initWayWindowGL(const char *title, const char *version,
 
 SDL_GLContext initOpenGLContext_and_glad(SDL_Window *window);
 
-void initImGUI(SDL_Window *window, SDL_GLContext *glContext);
+void initImGUI(SDL_Window *window, SDL_GLContext glContext);
 
 void cleanupWindow(SDL_Window *window, SDL_GLContext glContext);
 

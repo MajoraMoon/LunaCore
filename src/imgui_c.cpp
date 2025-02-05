@@ -22,10 +22,24 @@ void ImGui_SetupIO() {
 
 void ImGui_StyleColorsDark() { ImGui::StyleColorsDark(); }
 
-void ImGui_implSDL3_InitForOpenGL(void *window, void *context) {
+void ImGui_implSDL3_InitForOpenGL_C(void *window, void *context) {
   ImGui_ImplSDL3_InitForOpenGL((SDL_Window *)window, (SDL_GLContext)context);
 }
 
-void ImGui_ImplOpenGL3_Init_(const char *glsl_version) {
+void ImGui_ImplOpenGL3_Init_C(const char *glsl_version) {
   ImGui_ImplOpenGL3_Init(glsl_version);
 }
+
+void ImGui_ImplOpenGL3_NewFrame_C() { ImGui_ImplOpenGL3_NewFrame(); }
+void ImGui_ImplSDL3_NewFrame_C() { ImGui_ImplSDL3_NewFrame(); }
+void ImGui_NewFrame_C() { ImGui::NewFrame(); }
+void ImGui_Render_C() { ImGui::Render(); }
+void ImGui_ImplOpenGL3_RenderDrawData_C() {
+  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void ImGui_ImplSDL3_ProcessEvent_C(void *event) {
+  ImGui_ImplSDL3_ProcessEvent((SDL_Event *)event);
+}
+
+void ImGui_ShowDemoWindow() { ImGui::ShowDemoWindow(); }

@@ -79,15 +79,15 @@ SDL_GLContext initOpenGLContext_and_glad(SDL_Window *window)
   return glContext;
 }
 
-void initImGUI(SDL_Window *window, SDL_GLContext *glContext)
+void initImGUI(SDL_Window *window, SDL_GLContext glContext)
 {
 
   ImGui_CreateContext();
   ImGui_SetupIO();
   ImGui_StyleColorsDark();
 
-  ImGui_implSDL3_InitForOpenGL(window, glContext);
-  ImGui_ImplOpenGL3_Init_("#version 460");
+  ImGui_implSDL3_InitForOpenGL_C(window, glContext);
+  ImGui_ImplOpenGL3_Init_C("#version 460");
 }
 
 void cleanupWindow(SDL_Window *window, SDL_GLContext glContext)

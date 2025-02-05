@@ -55,8 +55,8 @@ static unsigned char *loadImage(const char *filePath, int *width, int *height)
   return byteDataImg;
 }
 
-const unsigned int SCR_WIDTH = 1280;
-const unsigned int SCR_HEIGHT = 720;
+const unsigned int SCR_WIDTH = 1920;
+const unsigned int SCR_HEIGHT = 1080;
 
 int main(int argc, char *argv[])
 {
@@ -71,6 +71,8 @@ int main(int argc, char *argv[])
   }
 
   SDL_GLContext glContext = initOpenGLContext_and_glad(window);
+
+  initImGUI(window, glContext);
 
   Shader shader = createShader("../shader/vertexShader.vert",
                                "../shader/fragmentShader.frag");
@@ -176,6 +178,8 @@ int main(int argc, char *argv[])
 
     while (SDL_PollEvent(&event))
     {
+      ImGui_ImplSDL3_ProcessEvent_C(&event);
+
       if (event.type == SDL_EVENT_QUIT)
       {
         running = false;
@@ -228,6 +232,16 @@ int main(int argc, char *argv[])
     glBindVertexArray(vaoID);
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    // Dear ImGui set up
+    ImGui_ImplOpenGL3_NewFrame_C();
+    ImGui_ImplSDL3_NewFrame_C();
+    ImGui_NewFrame_C();
+
+    ImGui_ShowDemoWindow();
+
+    ImGui_Render_C();
+    ImGui_ImplOpenGL3_RenderDrawData_C();
 
     SDL_GL_SwapWindow(window);
   }

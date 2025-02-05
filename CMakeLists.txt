@@ -43,7 +43,7 @@ target_include_directories(imgui_c PRIVATE
     ${CMAKE_SOURCE_DIR}/include      
 )
 
-
+# first imgui_c and then imgui otherwise this whole thing explodes
 add_executable(LunaCore ${SOURCES} ${GLAD_SRC})
 target_link_libraries(LunaCore PRIVATE imgui_c imgui )
 
