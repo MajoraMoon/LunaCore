@@ -9,6 +9,8 @@
 
 // clang-format on
 
+// activate and deactivate Vsync. It is implemented here because of ImGUI and
+// the C-wrapper. But it won't be touched anyway.
 typedef enum { VSyncOFF = 0, VSyncON = 1 } VsyncMode;
 
 static VsyncMode currentVsyncMode = VSyncOFF;
