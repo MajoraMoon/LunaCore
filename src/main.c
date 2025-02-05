@@ -51,9 +51,10 @@ int main(int argc, char *argv[]) {
         }
       }
     }
-
+    // Frames information
     updateFrameTimer(&frameTimer);
 
+    // here is the openGL rendering
     renderFrame(&renderer, SCR_WIDTH, SCR_HEIGHT);
 
     // Dear ImGui set up
@@ -79,7 +80,6 @@ int main(int argc, char *argv[]) {
 static void showInformationImGUI(float fps, float deltaTime, float stableFPS) {
 
   ImGui_Begin_C("Semi-useful Information");
-  ImGui_Text_c("FPS (per frame): %1f", fps);
   ImGui_Text_c("Delta Time: %.5f", deltaTime);
   ImGui_Text_c("FPS (per second): %.1f", stableFPS);
   ImGui_VsyncCombo_C();

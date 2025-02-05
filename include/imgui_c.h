@@ -1,3 +1,8 @@
+/**
+ *
+ * This is a header-wrapper for using dear ImGUI in C instead of C++.
+ * I know there are libraries for that but I wanted to make it myself :D
+ */
 #ifndef IMGUI_C_H
 #define IMGUI_C_H
 
