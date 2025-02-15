@@ -9,21 +9,20 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <glad/glad.h>
-#include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
-
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include <glad/glad.h>
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
+
+
+
 #include "wayWindowGL.h"
 #include "shader.h"
 #include "renderer.h"
 #include "resources.h"
-#include "frameTime.h"
-
-#include "imgui_c.h"
 
 #endif

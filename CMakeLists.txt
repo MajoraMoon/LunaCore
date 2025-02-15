@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.15)
 
 
 project(LunaCore C CXX)
-set(CMAKE_C_COMPILER gcc)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED True)
@@ -12,7 +11,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
-
+add_subdirectory(lib/cglm EXCLUDE_FROM_ALL)
 
 # C-Data
 file(GLOB_RECURSE SOURCES "src/*.c")
@@ -48,13 +47,12 @@ add_executable(LunaCore ${SOURCES} ${GLAD_SRC})
 target_link_libraries(LunaCore PRIVATE imgui_c imgui )
 
 
-
-
 target_include_directories(LunaCore PRIVATE 
     ${CMAKE_SOURCE_DIR}/lib/glad/include
     ${CMAKE_SOURCE_DIR}/include
 )
 
+target_link_libraries(LunaCore PRIVATE cglm_headers)
 
 # Windows specific configuriation. SDL3 is on the C-Drive.
 if(WIN32)

@@ -1,5 +1,9 @@
 #include "renderer.h"
 
+static FrameTimer frameTimer;
+
+static void showInformationImGUI(float fps, float deltaTime, float stableFPS);
+
 void initRenderer(Renderer *renderer) {
 
   // VSync is on (at least on standard settings. This will deactivate it before
@@ -78,18 +82,54 @@ void initRenderer(Renderer *renderer) {
   }
 
   free(imgData);
+
+  initFrameTimer(&frameTimer);
 }
 
 void renderFrame(Renderer *renderer, unsigned int srcWidth,
                  unsigned int srcHeight) {
+
+  // Frames information
+  updateFrameTimer(&frameTimer);
+  // transformations
+
+  mat4 trans;
+
+  glm_mat4_identity(trans);
+  glm_scale(trans, (vec3){0.5f, 0.5f, 0.5f});
+  float angle = frameTimer.lastFrame;
+  glm_rotate(trans, angle, (vec3){0.0f, 0.0f, 1.0f});
+
+  mat4 proj;
+  float aspect = (float)srcWidth / (float)srcHeight;
+  glm_ortho(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f, proj);
+
+  // actual rendering
+
+  useShader(&renderer->shader);
+  unsigned int transformLoc =
+      glGetUniformLocation(renderer->shader.ID, "transform");
+
+  glUniformMatrix4fv(transformLoc, 1, GL_FALSE, (const GLfloat *)&trans);
+
   glViewport(0, 0, srcWidth, srcHeight);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
 
   glBindTexture(GL_TEXTURE_2D, renderer->texture);
-  useShader(&renderer->shader);
   glBindVertexArray(renderer->vao);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+  // Dear ImGui set up
+  ImGui_ImplOpenGL3_NewFrame_C();
+  ImGui_ImplSDL3_NewFrame_C();
+  ImGui_NewFrame_C();
+
+  showInformationImGUI(frameTimer.fps, frameTimer.deltaTime,
+                       frameTimer.stableFPS);
+
+  ImGui_Render_C();
+  ImGui_ImplOpenGL3_RenderDrawData_C();
 }
 
 void cleanupRenderer(Renderer *renderer) {
@@ -97,4 +137,13 @@ void cleanupRenderer(Renderer *renderer) {
   glDeleteBuffers(1, &renderer->vbo);
   glDeleteBuffers(1, &renderer->ebo);
   glDeleteTextures(1, &renderer->texture);
+}
+
+static void showInformationImGUI(float fps, float deltaTime, float stableFPS) {
+
+  ImGui_Begin_C("Semi-useful Information");
+  ImGui_Text_c("Delta Time: %.5f", deltaTime);
+  ImGui_Text_c("FPS (per second): %.1f", stableFPS);
+  ImGui_VsyncCombo_C();
+  ImGui_End_c();
 }

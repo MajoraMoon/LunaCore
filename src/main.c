@@ -28,9 +28,6 @@ int main(int argc, char *argv[]) {
   Renderer renderer;
   initRenderer(&renderer);
 
-  FrameTimer frameTimer;
-  initFrameTimer(&frameTimer);
-
   bool running = true;
 
   // main render loop
@@ -51,22 +48,9 @@ int main(int argc, char *argv[]) {
         }
       }
     }
-    // Frames information
-    updateFrameTimer(&frameTimer);
 
     // here is the openGL rendering
     renderFrame(&renderer, SCR_WIDTH, SCR_HEIGHT);
-
-    // Dear ImGui set up
-    ImGui_ImplOpenGL3_NewFrame_C();
-    ImGui_ImplSDL3_NewFrame_C();
-    ImGui_NewFrame_C();
-
-    showInformationImGUI(frameTimer.fps, frameTimer.deltaTime,
-                         frameTimer.stableFPS);
-
-    ImGui_Render_C();
-    ImGui_ImplOpenGL3_RenderDrawData_C();
 
     SDL_GL_SwapWindow(window);
   }
@@ -75,13 +59,4 @@ int main(int argc, char *argv[]) {
   cleanupWindow(window, glContext);
 
   return 0;
-}
-
-static void showInformationImGUI(float fps, float deltaTime, float stableFPS) {
-
-  ImGui_Begin_C("Semi-useful Information");
-  ImGui_Text_c("Delta Time: %.5f", deltaTime);
-  ImGui_Text_c("FPS (per second): %.1f", stableFPS);
-  ImGui_VsyncCombo_C();
-  ImGui_End_c();
 }

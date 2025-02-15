@@ -3,13 +3,17 @@
 
 // clang-format off
 
-#include <glad/glad.h>
-#include <SDL3/SDL.h>
-#include "shader.h"
-#include "resources.h"
-
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <glad/glad.h>
+#include <SDL3/SDL.h>
+#include <cglm/cglm.h>
+
+#include "shader.h"
+#include "resources.h"
+#include "imgui_c.h"
+#include "frameTime.h"
 
 // clang-format on
 
